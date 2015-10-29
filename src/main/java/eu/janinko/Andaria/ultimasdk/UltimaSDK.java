@@ -2,9 +2,9 @@ package eu.janinko.Andaria.ultimasdk;
 
 import eu.janinko.Andaria.ultimasdk.files.Anims;
 import eu.janinko.Andaria.ultimasdk.files.Arts;
-import eu.janinko.Andaria.ultimasdk.files.FileIndex;
 import eu.janinko.Andaria.ultimasdk.files.Gumps;
 import eu.janinko.Andaria.ultimasdk.files.Hues;
+import eu.janinko.Andaria.ultimasdk.files.Skills;
 import eu.janinko.Andaria.ultimasdk.files.Statics;
 import eu.janinko.Andaria.ultimasdk.files.TileData;
 import eu.janinko.Andaria.ultimasdk.files.Verdata;
@@ -15,6 +15,7 @@ import eu.janinko.Andaria.ultimasdk.files.graphics.Bitmap;
 import eu.janinko.Andaria.ultimasdk.files.graphics.Color;
 import eu.janinko.Andaria.ultimasdk.files.gumps.Gump;
 import eu.janinko.Andaria.ultimasdk.files.hues.Hue;
+import eu.janinko.Andaria.ultimasdk.files.skills.Skill;
 import eu.janinko.Andaria.ultimasdk.files.statics.Static;
 import eu.janinko.Andaria.ultimasdk.files.tiledata.ItemData;
 import eu.janinko.Andaria.ultimasdk.files.tiledata.LandData;
@@ -36,7 +37,7 @@ import javax.imageio.ImageIO;
  * @author jbrazdil
  */
 public class UltimaSDK {
-	public static final String uopath="/home/janinko/Ultima/hra/";
+	public static final String uopath="/home/jbrazdil/Ultima/hra/";
 
 	/**
 	 * @param args the command line arguments
@@ -50,8 +51,11 @@ public class UltimaSDK {
 		File animmul = new File(uopath + "anim.mul");
 		File artidx = new File(uopath + "artidx.mul");
 		File artmul = new File(uopath + "art.mul");
-		File huesmul = new File(uopath + "hues.mul");
-		File huesmul2 = new File("/home/janinko/Stažené/hues.mul");
+		File skillidx = new File(uopath + "skills.idx");
+		File skillmul = new File(uopath + "skills.mul");
+		//File huesmul = new File(uopath + "hues.mul");
+		File huesmul = new File("/home/jbrazdil/Ultima/grafika/hues/hues-new.mul");
+		File huesmul2 = new File("/home/jbrazdil/Ultima/grafika/hues/hues.rawn.mul");
 		File staidx0 = new File(uopath + "staidx0.mul");
 		File statics0 = new File(uopath + "statics0.mul");
 		//File verdatamul = new File(uopath + "verdata.mul");
@@ -64,6 +68,7 @@ public class UltimaSDK {
 		Hues hues2 = new Hues(new FileInputStream(huesmul2));
 		Arts arts = new Arts(new FileInputStream(artidx), artmul);
 		Anims anims = new Anims(new FileInputStream(animidx), animmul);
+		Skills skills = new Skills(new FileInputStream(skillidx), skillmul);
 		//Verdata verdata = new Verdata(new FileInputStream(verdatamul));
 
 		//System.out.println(gumps);
@@ -71,8 +76,10 @@ public class UltimaSDK {
 		//doVerdata(verdata);
 		//doHue(hues);
         //generateHueStripes(hues);
-		//generatePaperdolGumpImages(tiledata, gumps);
-        generateArtImages(arts, tiledata);
+		generatePaperdolGumpImages(tiledata, gumps);
+		//doSkills(skills);
+		//skills.setSkill(54, new Skill(false,"padectyri"), new FileOutputStream(skillidx));
+        //generateArtImages(arts, tiledata);
 		//testBitmap(gumps);
 		//allColorGump(gumps, new FileOutputStream(gumpidx));
 		//twoColorGump(gumps, new FileOutputStream(gumpidx));
@@ -281,14 +288,16 @@ public class UltimaSDK {
 	}*/
 	
 	private static void doAnim(Anims anims) throws IOException{
+        File dir = new File("/tmp/uo/anims/stay");
+        dir.mkdirs();
 		for(int i=0; i< 1000; i++){
-			Anim anim = anims.getAnim1(i, Anims.STAY, Anims.DOWN);
+			Anim anim = anims.getAnim1(i, Anims.STAY, Anims.SOUTH);
 			if(anim == null) continue;
 			Frame f = anim.getFrame(0);
 			if(f == null) continue;
 			BufferedImage image = f.getImage();
 			if (image != null) {
-				File out = new File("/tmp/anims/stay/" + i + ".png");
+				File out = new File(dir, + i + ".png");
 				ImageIO.write(image, "png", out);
 			}
 		}
@@ -312,4 +321,10 @@ public class UltimaSDK {
 			ImageIO.write(image, "png", out);
         }
     }
+
+	private static void doSkills(Skills skills) throws IOException{
+		for(int i=0; i<55; i++){
+			System.out.println(i+": "+ skills.getSkill(i));
+		}
+	}
 }

@@ -50,6 +50,7 @@ public class FileIndex {
 	}
 
 	public DataPack getData(int i) throws IOException{
+		if(i < 0 || i >= index.size()) return null;
 		Entry3D entry = index.get(i);
 		if(entry.length <= 0) return null;
 		byte[] data = new byte[entry.length];
@@ -101,8 +102,12 @@ public class FileIndex {
 
 	public void save(OutputStream idxStream, OutputStream mulFile, int id, DataPack data) throws IOException {
 		LittleEndianDataOutputStream out = new LittleEndianDataOutputStream(idxStream);
+		int size = index.size();
+		if(id >= size){
+			size = id + 1;
+		}
 		int offset = 0;
-		for(int i=0; i<index.size(); i++){
+		for(int i=0; i<size; i++){
 			if(i == id){
 				if(data.data.length == 0){
 					out.writeInt(-1);
@@ -115,6 +120,10 @@ public class FileIndex {
 					mulFile.write(data.data);
 					offset += data.data.length;
 				}
+			}else if(i >= index.size()){
+				out.writeInt(-1);
+				out.writeInt(0);
+				out.writeInt(0);
 			}else{
 				offset += saveDatum(i, offset, out, mulFile);
 			}

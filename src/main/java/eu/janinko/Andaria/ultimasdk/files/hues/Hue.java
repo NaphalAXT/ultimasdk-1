@@ -7,7 +7,7 @@ import eu.janinko.Andaria.ultimasdk.utils.LittleEndianDataOutputStream;
 import java.io.IOException;
 
 /**
- *
+ * TODO: make immutable
  * @author Honza Brázdil <jbrazdil@redhat.com>
  */
 public final class Hue {
